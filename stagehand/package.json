@@ -19,6 +19,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "@browserbasehq/sdk": "^2.0.0",
     "@browserbasehq/stagehand": "^1.14.0",
 		"@modelcontextprotocol/sdk": "^1.0.3",
@@ -26,6 +27,7 @@
     "@playwright/test": "^1.49.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.1",
     "shx": "^0.3.4",
     "typescript": "^5.6.2"
   }
