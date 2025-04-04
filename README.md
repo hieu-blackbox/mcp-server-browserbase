@@ -1,36 +1,110 @@
 # Browserbase MCP Server
 
-![cover](assets/cover-mcp.png)
+![cover](../assets/browserbase-mcp.png)
 
-[The Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. Whether you’re building an AI-powered IDE, enhancing a chat interface, or creating custom AI workflows, MCP provides a standardized way to connect LLMs with the context they need.
+## Get Started
 
-This server provides cloud browser automation capabilities using [Browserbase](https://www.browserbase.com/), [Puppeteer](https://pptr.dev/), and [Stagehand](https://github.com/browserbase/stagehand). This server enables LLMs to interact with web pages, take screenshots, and execute JavaScript in a cloud browser environment.
+1. Run `npm install` to install the necessary dependencies, then run `npm run build` to get `dist/index.js`.
 
-To learn to get started with Browserbase, check out [Browserbase MCP](./browserbase/README.md) or [Stagehand MCP](./stagehand/README.md).
+2. Set up your Claude Desktop configuration to use the server.  
 
-## Getting Started with available MCPs
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "node",
+      "args": ["path/to/mcp-server-browserbase/browserbase/dist/index.js"],
+      "env": {
+        "BROWSERBASE_API_KEY": "<YOUR_BROWSERBASE_API_KEY>",
+        "BROWSERBASE_PROJECT_ID": "<YOUR_BROWSERBASE_PROJECT_ID>"
+      }
+    }
+  }
+}
+```
 
-🌐 **Browserbase MCP** - Located in [`browserbase/`](./browserbase/)
+3. Restart your Claude Desktop app and you should see the tools available clicking the 🔨 icon.
 
-| Feature            | Description                               |
-| ------------------ | ----------------------------------------- |
-| Browser Automation | Control and orchestrate cloud browsers    |
-| Data Extraction    | Extract structured data from any webpage  |
-| Console Monitoring | Track and analyze browser console logs    |
-| Screenshots        | Capture full-page and element screenshots |
-| JavaScript         | Execute custom JS in the browser context  |
-| Web Interaction    | Navigate, click, and fill forms with ease |
+4. Start using the tools! Below is an image of Claude closing a browser session.
 
-🤘 **Stagehand MCP** - Located in [`stagehand/`](./stagehand/)
+<p align="center">
+  <img src="../assets/browserbase-demo.png" alt="demo" width="600"/>
+</p>
 
-| Feature             | Description                                                                                                                                                    |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Atomic Instructions | Execute precise actions like `act("click the login button")` or `extract("find the red shoes")`                                                                |
-| Model Flexibility   | Supports multiple models, including OpenAI's GPT-4 and Anthropic's Claude-3.7 Sonnet                                                                           |
-| Modular Design      | Easily integrate new models with minimal changes                                                                                                               |
-| Vision Support      | Use annotated screenshots for complex DOMs                                                                                                                     |
-| Open Source         | Contribute to the project and join the [Slack community](https://join.slack.com/t/stagehand-dev/shared_invite/zt-2uvuobu50-~wVSx2Si75CPa3332hwVEw) for support |
 
-### Alternative Installation Methods
+## Tools
 
-[Smithery](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
+### Browserbase API
+
+- **browserbase_create_session**
+
+  - Create a new cloud browser session using Browserbase
+  - No required inputs
+
+- **browserbase_navigate**
+
+  - Navigate to any URL in the browser
+  - Input: `url` (string)
+
+- **browserbase_screenshot**
+
+  - Capture screenshots of the entire page or specific elements
+  - Inputs:
+    - `name` (string, required): Name for the screenshot
+    - `selector` (string, optional): CSS selector for element to screenshot
+    - `width` (number, optional, default: 800): Screenshot width
+    - `height` (number, optional, default: 600): Screenshot height
+
+- **browserbase_click**
+
+  - Click elements on the page
+  - Input: `selector` (string): CSS selector for element to click
+
+- **browserbase_fill**
+
+  - Fill out input fields
+  - Inputs:
+    - `selector` (string): CSS selector for input field
+    - `value` (string): Value to fill
+
+- **browserbase_evaluate**
+
+  - Execute JavaScript in the browser console
+  - Input: `script` (string): JavaScript code to execute
+
+- **browserbase_get_content**
+
+  - Extract all content from the current page
+  - Input: `selector` (string, optional): CSS selector to get content from specific elements
+
+- **browserbase_parallel_sessions**
+  - Create multiple browser sessions and navigate to different URLs
+  - Input: `sessions` (array): Array of objects containing:
+    - `url` (string): URL to navigate to
+    - `id` (string): Session identifier
+
+### Resources
+
+The server provides access to two types of resources:
+
+1. **Console Logs** (`console://logs`)
+
+   - Browser console output in text format
+   - Includes all console messages from the browser
+
+2. **Screenshots** (`screenshot://<name>`)
+   - PNG images of captured screenshots
+   - Accessible via the screenshot name specified during capture
+
+## Key Features
+
+- Cloud browser automation
+- Web data extraction
+- Console log monitoring
+- Screenshot capabilities
+- JavaScript execution
+- Basic web interaction (navigation, clicking, form filling)
+
+## License
+
+This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
