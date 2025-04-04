@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createServer } from "./server.js";
 import { ensureLogDirectory, registerExitHandlers, scheduleLogRotation, setupLogRotation } from "./logging.js";
 
@@ -10,18 +9,28 @@ setupLogRotation();
 scheduleLogRotation();
 registerExitHandlers();
 
-// Run the server
-async function runServer() {
-  const server = createServer();
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  server.sendLoggingMessage({
-    level: "info",
-    data: "Stagehand MCP server is ready to accept requests",
-  });
-}
 
-runServer().catch((error) => {
-  const errorMsg = error instanceof Error ? error.message : String(error);
-  console.error(errorMsg);
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import express from "express";
+const app = express();
+
+const server = createServer();
+let transport: SSEServerTransport;
+
+app.get("/sse", (req, res) => {
+    console.log("Received connection");
+    transport = new SSEServerTransport("/messages", res);
+    server.connect(transport);
+});
+
+app.post("/messages", (req, res) => {
+    console.log("Received message handle message");
+    if (transport) {
+        transport.handlePostMessage(req, res);
+    }
+});
+
+const PORT = process.env.PORT || 3001;
+    app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
