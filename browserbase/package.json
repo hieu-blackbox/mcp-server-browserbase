@@ -20,11 +20,13 @@
     "inspector": "npx @modelcontextprotocol/inspector build/index.js"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "@browserbasehq/sdk": "^2.0.0",
 		"@modelcontextprotocol/sdk": "^1.0.3",
     "puppeteer-core": "^23.9.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.1",
     "shx": "^0.3.4",
     "typescript": "^5.6.2"
   }
